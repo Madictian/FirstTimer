@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FirstTimer</string>
+    <string name="text_to_be">texttobe</string>
+    <string name="text_to_copy">Enter a message</string>
+    <string name="do_it_button">Click it!</string>
+
+</resources>
