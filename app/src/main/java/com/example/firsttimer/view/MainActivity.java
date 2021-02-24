@@ -7,46 +7,42 @@ import android.widget.EditText;
 
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import com.example.firsttimer.R;
 import com.example.firsttimer.model.Model;
 
 import java.util.Observable;
-import java.util.Observer;
 
 
 public class MainActivity extends AppCompatActivity{
 
-        private Model model = new Model();
+
+    private AndroidLowerCaseViewModel lowerCaseViewModel;
 
 
-
-   @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        observeModel(model);
-
-        TextView textView = (TextView) findViewById(R.id.textView3);
-        textView.setText(model.getData());
+        observeViewModel();
 
         EditText editText = (EditText) findViewById(R.id.editTextTextPersonName2);
-        editText.setText(model.getData());
-
+        editText.setText(lowerCaseViewModel.getPresentableData().getValue());
     }
 
-    private void observeModel(Model model){
-       model.addObserver(new Observer(){
+    private void observeViewModel(){
+        lowerCaseViewModel = new AndroidLowerCaseViewModel();
 
-           @Override
-           public void update(Observable o, Object arg) {
-               if (o instanceof Model){
-                   String data = ((Model) o).getData();
-                   TextView textView = (TextView) findViewById(R.id.textView3);
-                   textView.setText(data);
-               }
-           }
-       });
+        final Observer<String> stringObserver = new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                TextView outputView = (TextView) findViewById(R.id.textView3);
+                outputView.setText(s);
+            }
+        };
+
+        lowerCaseViewModel.getPresentableData().observe(this, stringObserver);
     }
 
 
@@ -54,7 +50,9 @@ public class MainActivity extends AppCompatActivity{
 
         EditText editText = (EditText) findViewById(R.id.editTextTextPersonName2);
 
-        model.setData(editText.getEditableText().toString());
+        String input = editText.getText().toString();
+
+        lowerCaseViewModel.setData(input);
     }
 
 }
